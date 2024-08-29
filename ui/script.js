@@ -106,9 +106,12 @@ function updateChart() {
     const variables = ['Absorbed Energy', 'COR'];
     
     variables.forEach((variable, index) => {
+        const chartWrapper = document.createElement('div');
+        chartWrapper.className = 'chart-wrapper';
         const canvas = document.createElement('canvas');
         canvas.id = `chart${index}`;
-        chartContainer.appendChild(canvas);
+        chartWrapper.appendChild(canvas);
+        chartContainer.appendChild(chartWrapper);
 
         const ctx = canvas.getContext('2d');
         new Chart(ctx, {
@@ -129,13 +132,41 @@ function updateChart() {
                         position: 'bottom',
                         title: {
                             display: true,
-                            text: 'Filler Percentage'
+                            text: 'Filler Percentage',
+                            color: 'white',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
                         }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: variable
+                            text: variable,
+                            color: 'white',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
                         }
                     }
                 },
@@ -145,7 +176,12 @@ function updateChart() {
                     },
                     title: {
                         display: true,
-                        text: `Filler % vs ${variable}`
+                        text: `Filler % vs ${variable}`,
+                        color: 'white',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
                     }
                 }
             }
