@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 from scipy.interpolate import interp1d
 import joblib
-
+import os
 
 app = Flask(__name__, static_url_path='')
 
@@ -23,6 +23,8 @@ def script():
     return send_from_directory('../ui', 'script.js')
 
 # Load data
+print(os.getcwd())
+print(os.listdir())
 data = pd.read_csv('enhanced_data.csv')
 features = ['filler_percentage', 'impact_energy', 'absorbed_energy', 'cor', 'elp']
 
