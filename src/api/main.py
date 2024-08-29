@@ -22,22 +22,7 @@ def styles():
 def script():
     return send_from_directory('../ui', 'script.js')
 
-# Load data
-def list_all_files(start_path):
-    for root, dirs, files in os.walk(start_path):
-        level = root.replace(start_path, '').count(os.sep)
-        indent = ' ' * 4 * level
-        print(f'{indent}{os.path.basename(root)}/')
-        subindent = ' ' * 4 * (level + 1)
-        for f in files:
-            print(f'{subindent}{f}')
-
-# Use the current directory as the starting point
-current_dir = os.getcwd()
-print(f"Listing all files in {current_dir} and its subdirectories:")
-list_all_files(current_dir)
-
-data = pd.read_csv('enhanced_data.csv')
+data = pd.read_csv(os.getcwd() + '/api/enhanced_data.csv')
 features = ['filler_percentage', 'impact_energy', 'absorbed_energy', 'cor', 'elp']
 
 # Initialize models
@@ -52,17 +37,17 @@ def train_models():
     X_scaled = scaler.fit_transform(X)
     nn_model.fit(X_scaled)
     
-    joblib.dump(scaler, 'scaler.joblib')
-    joblib.dump(nn_model, 'nn_model.joblib')
-    joblib.dump(data, 'training_data.joblib')
+    joblib.dump(scaler,os.getcwd() + '/api/scaler.joblib')
+    joblib.dump(nn_model, os.getcwd() + '/api/nn_model.joblib')
+    joblib.dump(data, os.getcwd() + '/api/training_data.joblib')
     
     return jsonify({"message": "Models trained successfully"})
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    scaler = joblib.load('scaler.joblib')
-    nn_model = joblib.load('nn_model.joblib')
-    training_data = joblib.load('training_data.joblib')
+    scaler = joblib.load(os.getcwd() + '/api/scaler.joblib')
+    nn_model = joblib.load(os.getcwd() + '/api/nn_model.joblib')
+    training_data = joblib.load(os.getcwd() + '/api/training_data.joblib')
     
     input_data = request.json['data']
     X_new = pd.DataFrame(input_data, columns=features)
