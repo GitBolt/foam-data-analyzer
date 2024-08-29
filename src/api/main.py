@@ -23,8 +23,20 @@ def script():
     return send_from_directory('../ui', 'script.js')
 
 # Load data
-print(os.getcwd())
-print(os.listdir())
+def list_all_files(start_path):
+    for root, dirs, files in os.walk(start_path):
+        level = root.replace(start_path, '').count(os.sep)
+        indent = ' ' * 4 * level
+        print(f'{indent}{os.path.basename(root)}/')
+        subindent = ' ' * 4 * (level + 1)
+        for f in files:
+            print(f'{subindent}{f}')
+
+# Use the current directory as the starting point
+current_dir = os.getcwd()
+print(f"Listing all files in {current_dir} and its subdirectories:")
+list_all_files(current_dir)
+
 data = pd.read_csv('enhanced_data.csv')
 features = ['filler_percentage', 'impact_energy', 'absorbed_energy', 'cor', 'elp']
 
