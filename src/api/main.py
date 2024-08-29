@@ -22,7 +22,7 @@ def styles():
 def script():
     return send_from_directory('../ui', 'script.js')
 
-data = pd.read_csv(os.getcwd() + '/api/enhanced_data.csv')
+data = pd.read_csv(os.getcwd() + '/enhanced_data.csv')
 features = ['filler_percentage', 'impact_energy', 'absorbed_energy', 'cor', 'elp']
 
 # Initialize models
@@ -37,17 +37,17 @@ def train_models():
     X_scaled = scaler.fit_transform(X)
     nn_model.fit(X_scaled)
     
-    joblib.dump(scaler,os.getcwd() + '/api/scaler.joblib')
-    joblib.dump(nn_model, os.getcwd() + '/api/nn_model.joblib')
-    joblib.dump(data, os.getcwd() + '/api/training_data.joblib')
+    joblib.dump(scaler,os.getcwd() + '/scaler.joblib')
+    joblib.dump(nn_model, os.getcwd() + '/nn_model.joblib')
+    joblib.dump(data, os.getcwd() + '/training_data.joblib')
     
     return jsonify({"message": "Models trained successfully"})
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    scaler = joblib.load(os.getcwd() + '/api/scaler.joblib')
-    nn_model = joblib.load(os.getcwd() + '/api/nn_model.joblib')
-    training_data = joblib.load(os.getcwd() + '/api/training_data.joblib')
+    scaler = joblib.load(os.getcwd() + '/scaler.joblib')
+    nn_model = joblib.load(os.getcwd() + '/nn_model.joblib')
+    training_data = joblib.load(os.getcwd() + '/training_data.joblib')
     
     input_data = request.json['data']
     X_new = pd.DataFrame(input_data, columns=features)
