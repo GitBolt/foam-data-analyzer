@@ -43,7 +43,7 @@ h1, h2, h3 {
 .input-section, .data-summary {
     height: 100%;
     background-color: rgb(39, 39, 39);
-    padding: 0.5rem 2rem;
+    padding: 1rem 1rem;
     border-radius: 2rem
 }
 
@@ -230,4 +230,69 @@ input[type="number"]:focus {
 
 #chartContainer {
     display: contents;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.toggle-container span {
+    margin: 0 0.5rem;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--secondary-color);
+    transition: .4s;
+}
+
+#csvUploadBtn {
+    width: 10rem;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(50px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }

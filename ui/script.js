@@ -5,28 +5,39 @@ const dataPointCountElement = document.getElementById('dataPointCount');
 document.addEventListener('DOMContentLoaded', () => {
     const csvUploadBtn = document.getElementById('csvUploadBtn');
     const csvFile = document.getElementById('csvFile');
-    const manualEntryBtn = document.getElementById('manualEntryBtn');
     const manualEntryForm = document.getElementById('manualEntryForm');
-    const dataForm = document.getElementById('dataForm');
-    const predictBtn = document.getElementById('predictBtn');
-    const resultsContainer = document.getElementById('resultsContainer');
+    const addDataPointBtn = document.getElementById('addDataPointBtn');
+
+    const inputToggle = document.getElementById('inputToggle');
 
     csvUploadBtn.addEventListener('click', () => csvFile.click());
     csvFile.addEventListener('change', handleCSVUpload);
-    manualEntryBtn.addEventListener('click', () => {
-        manualEntryForm.style.display = manualEntryForm.style.display === 'none' ? 'block' : 'none';
+    
+    inputToggle.addEventListener('change', () => {
+        if (inputToggle.checked) {
+            csvUploadBtn.style.display = 'none';
+            manualEntryForm.style.display = 'block';
+        } else {
+            csvUploadBtn.style.display = 'block';
+            manualEntryForm.style.display = 'none';
+        }
     });
+
+    const dataForm = document.getElementById('dataForm');
+    const predictBtn = document.getElementById('predictBtn');
+    csvUploadBtn.addEventListener('click', () => csvFile.click());
+    csvFile.addEventListener('change', handleCSVUpload);
     dataForm.addEventListener('submit', handleManualEntry);
     predictBtn.addEventListener('click', predictAnomalies);
 
     const inputs = document.querySelectorAll('#dataForm input[type="number"]');
-    const addDataPointBtn = document.getElementById('addDataPointBtn');
 
     inputs.forEach(input => {
         input.addEventListener('input', checkFormValidity);
     });
 
     function checkFormValidity() {
+        console.log(inputs)
         const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
         addDataPointBtn.disabled = !allFilled;
     }
@@ -59,8 +70,8 @@ function handleManualEntry(event) {
     const dataPoint = Array.from(formData.values()).map(Number);
     dataPoints.push(dataPoint);
     updateDataPointCount();
-    event.target.reset();
     updateChart();
+    event.target.reset(); // This will clear the form fields
 }
 
 function predictAnomalies() {

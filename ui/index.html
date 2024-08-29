@@ -19,15 +19,20 @@
                 <section class="card input-section">
                     <h2>Data Input</h2>
                     <div class="input-options">
-                        <button id="csvUploadBtn" class="btn btn-primary">
-                            <i class="fas fa-upload"></i> Upload CSV
-                        </button>
-                        <input type="file" id="csvFile" accept=".csv" style="display: none;">
-                        <button id="manualEntryBtn" class="btn btn-secondary">
-                            <i class="fas fa-keyboard"></i> Manual Entry
-                        </button>
+                        <div class="toggle-container">
+                            <span>CSV Upload</span>
+                            <label class="switch">
+                                <input type="checkbox" id="inputToggle">
+                                <span class="slider round"></span>
+                            </label>
+                            <span>Manual Entry</span>
+                        </div>
+             
                     </div>
-                    
+                    <button id="csvUploadBtn" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload CSV
+                    </button>
+                    <input type="file" id="csvFile" accept=".csv" style="display: none;">
                     <div id="manualEntryForm" class="hidden">
                         <h3>Manual Data Entry</h3>
                         <form id="dataForm">
