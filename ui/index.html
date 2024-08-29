@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syntactic Foam Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Syntactic Foam Analyzer</h1>
+        </header>
+        
+        <main>
+            <div class="grid-layout">
+                <section class="card input-section">
+                    <h2>Data Input</h2>
+                    <div class="input-options">
+                        <button id="csvUploadBtn" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload CSV
+                        </button>
+                        <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                        <button id="manualEntryBtn" class="btn btn-secondary">
+                            <i class="fas fa-keyboard"></i> Manual Entry
+                        </button>
+                    </div>
+                    
+                    <div id="manualEntryForm" class="hidden">
+                        <h3>Manual Data Entry</h3>
+                        <form id="dataForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fillerPercentage">Filler Percentage:</label>
+                                    <input type="number" id="fillerPercentage" name="fillerPercentage" required step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="impactEnergy">Impact Energy:</label>
+                                    <input type="number" id="impactEnergy" name="impactEnergy" required step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="absorbedEnergy">Absorbed Energy:</label>
+                                    <input type="number" id="absorbedEnergy" name="absorbedEnergy" required step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cor">Coefficient of Restitution (COR):</label>
+                                    <input type="number" id="cor" name="cor" required step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="elp">ELP:</label>
+                                    <input type="number" id="elp" name="elp" required step="0.01">
+                                </div>
+                            </div>
+                            <button type="submit" id="addDataPointBtn" class="btn btn-primary" disabled>
+                                <i class="fas fa-plus"></i> Add Data Point
+                            </button>
+                        </form>
+                    </div>
+                </section>
+                
+                <section class="card data-summary">
+                    <h2>Data Summary</h2>
+                    <p>Total Data Points: <span id="dataPointCount">0</span></p>
+                    <button id="predictBtn" class="btn btn-primary">
+                        <i class="fas fa-magic"></i> Predict Anomalies
+                    </button>
+                </section>
+
+                <section class="card results-section">
+                    <h2>Results</h2>
+                    <div id="resultsContainer"></div>
+                </section>
+
+                <section class="card chart-section">
+                    <h2>Data Visualization</h2>
+                    <div id="chartContainer" class="chart-container"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/script.js"></script>
+</body>
+</html>
