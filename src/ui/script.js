@@ -2,6 +2,8 @@ let dataPoints = [];
 let dataPointCount = 0;
 const dataPointCountElement = document.getElementById('dataPointCount');
 
+const chartSection = document.querySelector('.chart-section');
+
 document.addEventListener('DOMContentLoaded', () => {
     const csvUploadBtn = document.getElementById('csvUploadBtn');
     const csvFile = document.getElementById('csvFile');
@@ -17,9 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (inputToggle.checked) {
             csvUploadBtn.style.display = 'none';
             manualEntryForm.style.display = 'block';
+            if (window.innerWidth > 768) {
+                chartSection.classList.add('manual-entry-active');
+            }
         } else {
             csvUploadBtn.style.display = 'block';
             manualEntryForm.style.display = 'none';
+            chartSection.classList.remove('manual-entry-active');
         }
     });
 
@@ -207,3 +213,14 @@ function getColor(index) {
     ];
     return colors[index];
 }
+
+// Add a resize event listener to handle screen size changes
+window.addEventListener('resize', () => {
+    if (inputToggle.checked) {
+        if (window.innerWidth > 768) {
+            chartSection.classList.add('manual-entry-active');
+        } else {
+            chartSection.classList.remove('manual-entry-active');
+        }
+    }
+});

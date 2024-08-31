@@ -41,10 +41,21 @@ h1, h2, h3 {
 }
 
 .input-section, .data-summary {
-    height: 100%;
     background-color: rgb(39, 39, 39);
     padding: 1rem 1rem;
-    border-radius: 2rem
+    border-radius: 2rem;
+}
+
+.input-section {
+    height: auto;
+    min-height: 200px; /* Adjust this value as needed */
+}
+
+.data-summary {
+    height: 200px; /* Set a fixed height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .results-section, .chart-section {
@@ -113,7 +124,7 @@ h1, h2, h3 {
 }
 
 input[type="number"] {
-    width: 100%;
+    width: 90%;
     padding: 0.5rem;
     font-size: 1rem;
     background-color: var(--card-background);
@@ -155,15 +166,9 @@ input[type="number"]:focus {
     display: none;
 }
 
-.data-summary {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .data-summary p {
     font-size: 1.2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 #predictBtn {
@@ -196,6 +201,13 @@ input[type="number"]:focus {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
+    transition: transform 0.3s ease;
+}
+
+@media (min-width: 769px) {
+    .chart-section.manual-entry-active {
+        transform: translate(0, -15rem);
+    }
 }
 
 .chart-container {
