@@ -60,14 +60,57 @@ function handleCSVUpload(event) {
     reader.onload = function(e) {
         const csv = e.target.result;
         const lines = csv.split('\n');
+        
+        // Check if the CSV has at least one data row and a header
+        if (lines.length < 2) {
+            showCSVError("The CSV file is empty or has insufficient data.");
+            return;
+        }
+
+        // Check if the header has the correct number of columns
+        const header = lines[0].split(',');
+        if (header.length !== 5) {
+            showCSVError("The CSV file does not have the correct number of columns.");
+            return;
+        }
+
         dataPoints = lines.slice(1).map(line => {
             const values = line.split(',');
             return values.map(Number);
         }).filter(point => point.length === 5 && !point.some(isNaN));
+
+        // Check if any valid data points were extracted
+        if (dataPoints.length === 0) {
+            showCSVError("No valid data points found in the CSV file.");
+            return;
+        }
+
         updateDataPointCount();
         updateChart();
     };
     reader.readAsText(file);
+}
+
+function showCSVError(message) {
+    const errorMessage = `
+        <div class="error-message">
+            <p>${message}</p>
+            <p>The CSV should have the following format:</p>
+            <pre>
+Filler Percentage,Impact Energy,Absorbed Energy,COR,ELP
+10.5,100.2,75.3,0.8,0.6
+15.2,110.5,80.1,0.75,0.65
+...
+            </pre>
+        </div>
+    `;
+    
+    const resultsContainer = document.getElementById('resultsContainer');
+    resultsContainer.innerHTML = errorMessage;
+    resultsContainer.style.display = 'block';
+    
+    // Reset the file input
+    document.getElementById('csvFile').value = '';
 }
 
 function handleManualEntry(event) {
@@ -81,6 +124,13 @@ function handleManualEntry(event) {
 }
 
 function predictAnomalies() {
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const resultsContainer = document.getElementById('resultsContainer');
+    
+    // Show spinner and hide results
+    loadingSpinner.style.display = 'block';
+    resultsContainer.style.display = 'none';
+
     fetch('/predict', {
         method: 'POST',
         headers: {
@@ -90,10 +140,17 @@ function predictAnomalies() {
     })
     .then(response => response.json())
     .then(data => {
+        // Hide spinner and show results
+        loadingSpinner.style.display = 'none';
+        resultsContainer.style.display = 'block';
         displayResults(data);
     })
     .catch((error) => {
         console.error('Error:', error);
+        // Hide spinner and show error message
+        loadingSpinner.style.display = 'none';
+        resultsContainer.style.display = 'block';
+        resultsContainer.innerHTML = '<p>An error occurred while predicting anomalies. Please try again.</p>';
     });
 }
 
