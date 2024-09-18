@@ -206,7 +206,7 @@ input[type="number"]:focus {
 
 @media (min-width: 769px) {
     .chart-section.manual-entry-active {
-        transform: translate(0, -15rem);
+        transform: translate(0, -5rem);
     }
 }
 

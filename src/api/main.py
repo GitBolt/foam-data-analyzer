@@ -23,7 +23,9 @@ def script():
     return send_from_directory('../ui', 'script.js')
 
 data = pd.read_csv(os.getcwd() + '/api/enhanced_data.csv')
-features = ['filler_percentage', 'impact_energy', 'absorbed_energy', 'cor', 'elp']
+input_features = ['filler_percentage', 'impact_energy']
+output_features = ['absorbed_energy', 'cor', 'elp']
+all_features = input_features + output_features
 
 # Initialize models
 scaler = StandardScaler()
@@ -33,11 +35,11 @@ nn_model = NearestNeighbors(n_neighbors=5, metric='euclidean')
 def train_models():
     global scaler, nn_model, data
     
-    X = data[features]
+    X = data[all_features]
     X_scaled = scaler.fit_transform(X)
     nn_model.fit(X_scaled)
     
-    joblib.dump(scaler,os.getcwd() + '/api/scaler.joblib')
+    joblib.dump(scaler, os.getcwd() + '/api/scaler.joblib')
     joblib.dump(nn_model, os.getcwd() + '/api/nn_model.joblib')
     joblib.dump(data, os.getcwd() + '/api/training_data.joblib')
     
@@ -50,27 +52,36 @@ def predict():
     training_data = joblib.load(os.getcwd() + '/api/training_data.joblib')
     
     input_data = request.json['data']
-    X_new = pd.DataFrame(input_data, columns=features)
-    
-    X_new_scaled = scaler.transform(X_new)
-    distances, indices = nn_model.kneighbors(X_new_scaled)
+    X_new = pd.DataFrame(input_data, columns=input_features)
     
     results = []
     for i, row in X_new.iterrows():
-        is_anomaly, reasons = check_anomaly(row, training_data)
+        # Predict other features
+        predicted_features = predict_features(row, training_data)
+        
+        # Combine input and predicted features
+        full_row = {**row.to_dict(), **predicted_features}
+        
+        is_anomaly, reasons = check_anomaly(pd.Series(full_row), training_data)
         
         results.append({
             "id": i,
             "filler_percentage": float(row['filler_percentage']),
             "impact_energy": float(row['impact_energy']),
-            "absorbed_energy": float(row['absorbed_energy']),
-            "cor": float(row['cor']),
-            "elp": float(row['elp']),
+            "absorbed_energy": float(predicted_features['absorbed_energy']),
+            "cor": float(predicted_features['cor']),
+            "elp": float(predicted_features['elp']),
             "is_anomaly": is_anomaly,
             "anomaly_reasons": reasons
         })
     
     return jsonify(results)
+
+def predict_features(row, training_data):
+    predicted_features = {}
+    for feature in output_features:
+        predicted_features[feature] = interpolate_property(training_data, row['filler_percentage'], row['impact_energy'], feature)
+    return predicted_features
 
 def interpolate_property(data, filler, impact, property):
     unique_fillers = sorted(data['filler_percentage'].unique())
